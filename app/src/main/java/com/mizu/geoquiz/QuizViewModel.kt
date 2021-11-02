@@ -7,7 +7,6 @@ private const val TAG = "QuizViewModel"
 class QuizViewModel: ViewModel() {
 
     var currentIndex = 0
-    var isCheater = false
 
     private val questionBank = listOf(
         Question(R.string.question_australia, true),
@@ -23,6 +22,9 @@ class QuizViewModel: ViewModel() {
 
     val currentQuestionText: Int
         get() = questionBank[currentIndex].textResId
+
+    val currentQuestionObj: Question
+        get() = questionBank[currentIndex]
 
     fun moveToNext() {
         currentIndex = (currentIndex + 1) % questionBank.size
