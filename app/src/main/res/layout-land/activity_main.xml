@@ -39,6 +39,15 @@
         android:text="@string/cheat_button" />
 
     <Button
+        android:id="@+id/prev_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:drawableLeft="@drawable/arrow_left"
+        android:drawablePadding="40dp"
+        android:text="@string/prev_button" />
+
+    <Button
         android:id="@+id/next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
