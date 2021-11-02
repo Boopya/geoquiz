@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import kotlin.math.roundToInt
 
 private const val TAG = "MainActivity"
 private const val KEY_INDEX = "index"
@@ -49,12 +50,14 @@ class MainActivity : AppCompatActivity() {
             checkAnswer(true)
             markCurrentQuestionAsAnswered()
             disableAnswerButtonsIfCurrentQuestionIsAnswered()
+            displayPercentageScoreIfAllQuestionsAreAnswered()
         }
 
         falseButton.setOnClickListener { view: View ->
             checkAnswer(false)
             markCurrentQuestionAsAnswered()
             disableAnswerButtonsIfCurrentQuestionIsAnswered()
+            displayPercentageScoreIfAllQuestionsAreAnswered()
         }
 
         nextButton.setOnClickListener {
@@ -142,11 +145,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkAnswer(userAnswer: Boolean) {
         val correctAnswer = quizViewModel.currentQuestionAnswer
+        val messageResId: Int?
 
-        val messageResId = when {
-            quizViewModel.isCheater -> R.string.judgement_toast
-            userAnswer == correctAnswer -> R.string.correct_toast
-            else -> R.string.incorrect_toast
+        when {
+            quizViewModel.isCheater -> messageResId = R.string.judgement_toast
+            userAnswer == correctAnswer -> {
+                messageResId = R.string.correct_toast
+                quizViewModel.score++
+            }
+            else -> messageResId = R.string.incorrect_toast
         }
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
@@ -160,5 +167,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun markCurrentQuestionAsAnswered() {
         quizViewModel.currentQuestion.isAnswered = true
+    }
+
+    /**
+     * Loop through the question bank and check if every question has already been answered.
+     * If all have already been answered, display a Toast with the percentage score.
+     * Otherwise, return from the function.
+     *
+     * In other words, if any of the questions hasn't been answered yet, do not proceed with
+     * displaying of the percentage score.
+     */
+    private fun displayPercentageScoreIfAllQuestionsAreAnswered() {
+        val questions = quizViewModel.getQuestions()
+
+        for (question in questions) {
+            if (!question.isAnswered) {
+                return
+            }
+        }
+
+        val finalScore = quizViewModel.score.toDouble().div(questions.size).times(100).roundToInt()
+        Log.d(TAG, "In displayPercentageScoreIfAllQuestionsAreAnswered: Final score is $finalScore%.")
+        Toast.makeText(this, "Score: ${finalScore}%", Toast.LENGTH_SHORT)
+            .show()
     }
 }

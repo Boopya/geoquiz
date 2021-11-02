@@ -8,6 +8,7 @@ class QuizViewModel: ViewModel() {
 
     var currentIndex = 0
     var isCheater = false
+    var score = 0
 
     private val questionBank = listOf(
         Question(R.string.question_australia, true),
@@ -39,5 +40,9 @@ class QuizViewModel: ViewModel() {
             currentIndex.equals(0) -> questionBank.size - 1
             else -> currentIndex - 1
         }
+    }
+
+    fun getQuestions(): List<Question> {
+        return questionBank
     }
 }
