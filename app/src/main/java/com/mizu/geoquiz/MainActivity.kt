@@ -47,20 +47,26 @@ class MainActivity : AppCompatActivity() {
 
         trueButton.setOnClickListener { view: View ->
             checkAnswer(true)
+            markCurrentQuestionAsAnswered()
+            disableAnswerButtonsIfCurrentQuestionIsAnswered()
         }
 
         falseButton.setOnClickListener { view: View ->
             checkAnswer(false)
+            markCurrentQuestionAsAnswered()
+            disableAnswerButtonsIfCurrentQuestionIsAnswered()
         }
 
         nextButton.setOnClickListener {
             quizViewModel.moveToNext()
             updateQuestion()
+            disableAnswerButtonsIfCurrentQuestionIsAnswered()
         }
 
         prevButton.setOnClickListener {
             quizViewModel.moveToPrev()
             updateQuestion()
+            disableAnswerButtonsIfCurrentQuestionIsAnswered()
         }
 
         cheatButton.setOnClickListener { view ->
@@ -82,6 +88,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateQuestion()
+        disableAnswerButtonsIfCurrentQuestionIsAnswered()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -144,5 +151,14 @@ class MainActivity : AppCompatActivity() {
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
             .show()
+    }
+
+    private fun disableAnswerButtonsIfCurrentQuestionIsAnswered() {
+        trueButton.isEnabled = !quizViewModel.isCurrentQuestionAnswered
+        falseButton.isEnabled = !quizViewModel.isCurrentQuestionAnswered
+    }
+
+    private fun markCurrentQuestionAsAnswered() {
+        quizViewModel.currentQuestion.isAnswered = true
     }
 }

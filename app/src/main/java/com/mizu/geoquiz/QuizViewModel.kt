@@ -24,6 +24,12 @@ class QuizViewModel: ViewModel() {
     val currentQuestionText: Int
         get() = questionBank[currentIndex].textResId
 
+    val isCurrentQuestionAnswered: Boolean
+        get() = questionBank[currentIndex].isAnswered
+
+    val currentQuestion: Question
+        get() = questionBank[currentIndex]
+
     fun moveToNext() {
         currentIndex = (currentIndex + 1) % questionBank.size
     }
