@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.viewModels
 
 private const val EXTRA_ANSWER_IS_TRUE = "com.mizu.geoquiz.answer_is_true"
 const val EXTRA_ANSWER_SHOWN = "com.mizu.geoquiz.answer_shown"
@@ -15,6 +16,8 @@ class CheatActivity : AppCompatActivity() {
 
     private lateinit var answerTextView: TextView
     private lateinit var showAnswerButton: Button
+
+    private val cheatActivityViewModel: CheatActivityViewModel by viewModels()
 
     private var answerIsTrue = false
 
@@ -30,8 +33,14 @@ class CheatActivity : AppCompatActivity() {
                 answerIsTrue -> R.string.true_button
                 else -> R.string.false_button
             }
+            cheatActivityViewModel.userDidCheat = true
             answerTextView.setText(answerText)
-            setAnswerShowResult(true)
+            setAnswerShowResult(cheatActivityViewModel.userDidCheat)
+        }
+
+        if (cheatActivityViewModel.userDidCheat) {
+            answerTextView.setText(R.string.true_button)
+            setAnswerShowResult(cheatActivityViewModel.userDidCheat)
         }
     }
 
