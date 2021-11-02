@@ -46,14 +46,14 @@ class MainActivity : AppCompatActivity() {
         cheatButton = findViewById(R.id.cheat_button)
         questionTextView = findViewById(R.id.question_text_view)
 
-        trueButton.setOnClickListener { view: View ->
+        trueButton.setOnClickListener {
             checkAnswer(true)
             markCurrentQuestionAsAnswered()
             disableAnswerButtonsIfCurrentQuestionIsAnswered()
             displayPercentageScoreIfAllQuestionsAreAnswered()
         }
 
-        falseButton.setOnClickListener { view: View ->
+        falseButton.setOnClickListener {
             checkAnswer(false)
             markCurrentQuestionAsAnswered()
             disableAnswerButtonsIfCurrentQuestionIsAnswered()
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (requestCode == REQUEST_CODE_CHEAT) {
-            quizViewModel.isCheater =
+            quizViewModel.currentQuestion.isCheated =
                 data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
         }
     }
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
         val messageResId: Int?
 
         when {
-            quizViewModel.isCheater -> messageResId = R.string.judgement_toast
+            quizViewModel.currentQuestion.isCheated -> messageResId = R.string.judgement_toast
             userAnswer == correctAnswer -> {
                 messageResId = R.string.correct_toast
                 quizViewModel.score++
