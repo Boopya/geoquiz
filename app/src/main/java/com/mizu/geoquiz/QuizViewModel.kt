@@ -1,6 +1,5 @@
 package com.mizu.geoquiz
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 
 private const val TAG = "QuizViewModel"
@@ -27,5 +26,12 @@ class QuizViewModel: ViewModel() {
 
     fun moveToNext() {
         currentIndex = (currentIndex + 1) % questionBank.size
+    }
+
+    fun moveToPrev() {
+        currentIndex = when {
+            currentIndex.equals(0) -> questionBank.size - 1
+            else -> currentIndex - 1
+        }
     }
 }
