@@ -69,6 +69,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        questionTextView.setOnClickListener {
+            quizViewModel.moveToNext()
+            updateQuestion()
+        }
+
         updateQuestion()
     }
 
