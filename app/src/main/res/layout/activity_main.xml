@@ -40,9 +40,17 @@
         android:layout_marginTop="24dp"
         android:text="@string/cheat_button" />
 
+    <TextView
+        android:id="@+id/cheat_count_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        tools:text="Cheat count: 1" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal">
 
         <Button

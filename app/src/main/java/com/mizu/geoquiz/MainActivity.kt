@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var prevButton: Button
     private lateinit var cheatButton: Button
     private lateinit var questionTextView: TextView
+    private lateinit var cheatCountTextView: TextView
 
     private val quizViewModel: QuizViewModel by viewModels()
 
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         prevButton = findViewById(R.id.prev_button)
         cheatButton = findViewById(R.id.cheat_button)
         questionTextView = findViewById(R.id.question_text_view)
+        cheatCountTextView = findViewById(R.id.cheat_count_text_view)
 
         trueButton.setOnClickListener {
             checkAnswer(true)
@@ -92,6 +94,7 @@ class MainActivity : AppCompatActivity() {
 
         updateQuestion()
         disableAnswerButtonsIfCurrentQuestionIsAnswered()
+        cheatCountTextView.text = "Cheat count: ${quizViewModel.cheatCount}"
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -104,6 +107,12 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_CHEAT) {
             quizViewModel.currentQuestion.isCheated =
                 data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+
+            if (quizViewModel.currentQuestion.isCheated) {
+                quizViewModel.cheatCount++
+                cheatCountTextView.text = "Cheat count: ${quizViewModel.cheatCount}"
+                cheatButton.isEnabled = quizViewModel.cheatCount < 3
+            }
         }
     }
 
