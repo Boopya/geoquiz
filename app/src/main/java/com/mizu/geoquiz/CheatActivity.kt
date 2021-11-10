@@ -3,6 +3,7 @@ package com.mizu.geoquiz
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -16,6 +17,7 @@ class CheatActivity : AppCompatActivity() {
 
     private lateinit var answerTextView: TextView
     private lateinit var showAnswerButton: Button
+    private lateinit var apiLevelTextView: TextView
 
     private val cheatActivityViewModel: CheatActivityViewModel by viewModels()
 
@@ -27,6 +29,7 @@ class CheatActivity : AppCompatActivity() {
 
         answerIsTrue = intent.getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false)
         answerTextView = findViewById(R.id.answer_text_view)
+        apiLevelTextView = findViewById(R.id.api_level_text_view)
         showAnswerButton = findViewById(R.id.show_answer_button)
         showAnswerButton.setOnClickListener {
             val answerText = when {
@@ -37,6 +40,8 @@ class CheatActivity : AppCompatActivity() {
             answerTextView.setText(answerText)
             setAnswerShowResult(cheatActivityViewModel.userDidCheat)
         }
+
+        apiLevelTextView.text = "API Level ${Build.VERSION.SDK_INT}"
 
         if (cheatActivityViewModel.userDidCheat) {
             answerTextView.setText(R.string.true_button)
