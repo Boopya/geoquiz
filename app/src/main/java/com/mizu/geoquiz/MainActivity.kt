@@ -19,7 +19,7 @@ private const val KEY_INDEX = "index"
 private const val REQUEST_CODE_CHEAT = 0
 
 class MainActivity : AppCompatActivity() {
-    
+
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
     private lateinit var nextButton: Button
@@ -94,7 +94,8 @@ class MainActivity : AppCompatActivity() {
 
         updateQuestion()
         disableAnswerButtonsIfCurrentQuestionIsAnswered()
-        cheatCountTextView.text = "Cheat count: ${quizViewModel.cheatCount}"
+        displayCheatCount()
+        disableCheatButtonIfCheatCountIsThree()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -110,8 +111,8 @@ class MainActivity : AppCompatActivity() {
 
             if (quizViewModel.currentQuestion.isCheated) {
                 quizViewModel.cheatCount++
-                cheatCountTextView.text = "Cheat count: ${quizViewModel.cheatCount}"
-                cheatButton.isEnabled = quizViewModel.cheatCount < 3
+                displayCheatCount()
+                disableCheatButtonIfCheatCountIsThree()
             }
         }
     }
@@ -196,8 +197,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         val finalScore = quizViewModel.score.toDouble().div(questions.size).times(100).roundToInt()
-        Log.d(TAG, "In displayPercentageScoreIfAllQuestionsAreAnswered: Final score is $finalScore%.")
+        Log.d(
+            TAG,
+            "In displayPercentageScoreIfAllQuestionsAreAnswered: Final score is $finalScore%."
+        )
         Toast.makeText(this, "Score: ${finalScore}%", Toast.LENGTH_SHORT)
             .show()
+    }
+
+    private fun disableCheatButtonIfCheatCountIsThree() {
+        cheatButton.isEnabled = quizViewModel.cheatCount < 3
+    }
+
+    private fun displayCheatCount() {
+        cheatCountTextView.text = "Cheat count: ${quizViewModel.cheatCount}"
     }
 }
