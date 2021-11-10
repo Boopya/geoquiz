@@ -19,13 +19,14 @@ private const val KEY_INDEX = "index"
 private const val REQUEST_CODE_CHEAT = 0
 
 class MainActivity : AppCompatActivity() {
-    
+
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
     private lateinit var nextButton: Button
     private lateinit var prevButton: Button
     private lateinit var cheatButton: Button
     private lateinit var questionTextView: TextView
+    private lateinit var cheatCountTextView: TextView
 
     private val quizViewModel: QuizViewModel by viewModels()
 
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         prevButton = findViewById(R.id.prev_button)
         cheatButton = findViewById(R.id.cheat_button)
         questionTextView = findViewById(R.id.question_text_view)
+        cheatCountTextView = findViewById(R.id.cheat_count_text_view)
 
         trueButton.setOnClickListener {
             checkAnswer(true)
@@ -92,6 +94,8 @@ class MainActivity : AppCompatActivity() {
 
         updateQuestion()
         disableAnswerButtonsIfCurrentQuestionIsAnswered()
+        displayCheatCount()
+        disableCheatButtonIfCheatCountIsThree()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -104,6 +108,12 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_CHEAT) {
             quizViewModel.currentQuestion.isCheated =
                 data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+
+            if (quizViewModel.currentQuestion.isCheated) {
+                quizViewModel.cheatCount++
+                displayCheatCount()
+                disableCheatButtonIfCheatCountIsThree()
+            }
         }
     }
 
@@ -187,8 +197,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         val finalScore = quizViewModel.score.toDouble().div(questions.size).times(100).roundToInt()
-        Log.d(TAG, "In displayPercentageScoreIfAllQuestionsAreAnswered: Final score is $finalScore%.")
+        Log.d(
+            TAG,
+            "In displayPercentageScoreIfAllQuestionsAreAnswered: Final score is $finalScore%."
+        )
         Toast.makeText(this, "Score: ${finalScore}%", Toast.LENGTH_SHORT)
             .show()
+    }
+
+    private fun disableCheatButtonIfCheatCountIsThree() {
+        cheatButton.isEnabled = quizViewModel.cheatCount < 3
+    }
+
+    private fun displayCheatCount() {
+        cheatCountTextView.text = "Cheat count: ${quizViewModel.cheatCount}"
     }
 }
